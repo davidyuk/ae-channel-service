@@ -2,8 +2,9 @@
 version: '3'
 services:
   aenode:
-    build: https://github.com/aeternity/aeternity.git#${NODE_REF:-master}
-    image: aeternity/aeternity:${NODE_REF:-master}
+    image: aeternity/aeternity:v5.5.4
+    # build: https://github.com/aeternity/aeternity.git#${NODE_REF:-master}
+    # image: aeternity/aeternity:${NODE_REF:-master}
     ports:
       - "3013:3013"
       - "3014:3014"
@@ -12,3 +13,16 @@ services:
     volumes:
       - "./test/accounts_test.json:/home/aeternity/node/data/aecore/.genesis/accounts_test.json"
       - "${NODE_CONFIGURATION:-./test/aeternity_node_fast_test_config.yml}:/home/aeternity/node/aeternity.yaml"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.30'
+  aechannelservice:
+    # stdin_open: true
+    # tty: true
+    build:
+      context: .
+    ports:
+      - "4000:4000"
+    environment:
+      - AE_NODE_NETWORK_ID=ae_channel_service_test
